@@ -1,0 +1,39 @@
+single\_shot\_classifier package
+================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 10
+
+   single_shot_classifier.conf
+   single_shot_classifier.telemetry
+   single_shot_classifier.tests
+
+Submodules
+----------
+
+single\_shot\_classifier.hello\_world module
+--------------------------------------------
+
+.. automodule:: single_shot_classifier.hello_world
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+single\_shot\_classifier.singleshotclassifier module
+----------------------------------------------------
+
+.. automodule:: single_shot_classifier.singleshotclassifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: single_shot_classifier
+   :members:
+   :undoc-members:
+   :show-inheritance:

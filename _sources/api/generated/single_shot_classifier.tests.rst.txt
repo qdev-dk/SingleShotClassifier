@@ -1,0 +1,37 @@
+single\_shot\_classifier.tests package
+======================================
+
+Submodules
+----------
+
+single\_shot\_classifier.tests.conftest module
+----------------------------------------------
+
+.. automodule:: single_shot_classifier.tests.conftest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+single\_shot\_classifier.tests.test\_config module
+--------------------------------------------------
+
+.. automodule:: single_shot_classifier.tests.test_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+single\_shot\_classifier.tests.test\_installation module
+--------------------------------------------------------
+
+.. automodule:: single_shot_classifier.tests.test_installation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: single_shot_classifier.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:

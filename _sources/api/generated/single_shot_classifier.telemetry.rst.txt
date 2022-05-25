@@ -1,0 +1,21 @@
+single\_shot\_classifier.telemetry package
+==========================================
+
+Submodules
+----------
+
+single\_shot\_classifier.telemetry.telemetry\_functions module
+--------------------------------------------------------------
+
+.. automodule:: single_shot_classifier.telemetry.telemetry_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: single_shot_classifier.telemetry
+   :members:
+   :undoc-members:
+   :show-inheritance:

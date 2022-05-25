@@ -1,0 +1,10 @@
+single\_shot\_classifier.conf package
+=====================================
+
+Module contents
+---------------
+
+.. automodule:: single_shot_classifier.conf
+   :members:
+   :undoc-members:
+   :show-inheritance:

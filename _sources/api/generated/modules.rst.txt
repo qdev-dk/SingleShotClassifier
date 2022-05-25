@@ -1,0 +1,7 @@
+single_shot_classifier
+======================
+
+.. toctree::
+   :maxdepth: 10
+
+   single_shot_classifier
