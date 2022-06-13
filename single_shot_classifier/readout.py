@@ -157,12 +157,12 @@ class Readout(Plotting):
         try:
             try:
                 predict = self.cv_search.predict(data)
-            except:
+            except Exception:
                 predict = self.predict([data])
-        except:
+        except Exception:
             try:
                 predict = self.cv_search.predict(self._reformate(data))
-            except:
+            except Exception:
                 print(
                     "Something went wrong. Data may be in wrong format. Make sure data is in format: [[I1,Q1],[I2, Q2]]"
                 )
@@ -175,9 +175,7 @@ class Readout(Plotting):
         Returns:
             best params (list): Best prarameters
         """
-        best_params = self.cv_search.cv_results_["params"][self.cv_search.best_index_]
-
-        return best_params
+        return self.cv_search.cv_results_["params"][self.cv_search.best_index_]
 
     def _get_file_name_from_path(self, path, part="tail"):
         """Small function for getting the hit and sale of path.
@@ -195,20 +193,18 @@ class Readout(Plotting):
         try:
             head, tail = os.path.split(path)
 
-            if part == "head":
-                return head
-            else:
-                return tail
-        except:
-            # print('No filepath fund. Please make a title manually.')
+            return head if part == "head" else tail
+        except Exception:
+            print("No filepath fund. Please make a title manually.")
             return ""
 
     def _reformate(self, X):
         """A function that reformates data if not in the right format. The wanted format is [[i,q],[i,q], ...]
         """
-        h5data_reformated = []
-        for i in range(len(X)):
-            h5data_reformated.append(np.column_stack((X[i].real, X[i].imag)))
+        h5data_reformated = [
+            np.column_stack((X[i].real, X[i].imag)) for i in range(len(X))
+        ]
+
         return np.array(h5data_reformated)
 
     def calculate_temp(self, X=None, prob=None, freq=None, size=None):
@@ -286,7 +282,28 @@ class Readout(Plotting):
 def reformate(X):
     """A function that reformates data if not in the right format. The wanted format is [[i,q],[i,q], ...]
     """
-    h5data_reformated = []
-    for i in range(len(X)):
-        h5data_reformated.append(np.column_stack((X[i].real, X[i].imag)))
+    h5data_reformated = [np.column_stack((X[i].real, X[i].imag)) for i in range(len(X))]
+
     return np.array(h5data_reformated)
+
+
+class supportFunction:
+    def _getFileNameFromPath(self, part="head"):
+        """Small function for getting the hit and sale of path.
+
+            Args:
+                path (string): Datafile path
+                part (str, optional): If head, the main part is returned. If tail, the filename is retruned. Defaults to 'tail'.
+
+            Returns:
+                head (string): main part of path.
+                tail (string): filename 
+            """
+        import os
+
+        try:
+            head, tail = os.path.split(self)
+
+            return head if part == "head" else tail
+        except Exception:
+            return None

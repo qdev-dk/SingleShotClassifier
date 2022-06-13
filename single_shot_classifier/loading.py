@@ -32,7 +32,7 @@ class DataImport:
 
         self._filePath = filePath
 
-        if fileName == None:
+        if fileName is None:
             self._fileName = self._get_file_name_from_path(self._filePath)
         else:
             self._fileName = fileName
@@ -54,11 +54,7 @@ class DataImport:
             # define states
             self.data_mean = self._min_max_index()
 
-            if state_entries:
-                self.state_entries = state_entries
-            else:
-                self.state_entries = self.data_mean[1]
-
+            self.state_entries = state_entries or self.data_mean[1]
         self.set_states(state_entries=entries, labels=labels)
 
     def set_data(
@@ -94,7 +90,7 @@ class DataImport:
                     "name": f"{channelName_log} [{unit_log}]",
                     "axis": h5datalog[:, 0, 0],
                 }
-            except:
+            except Exception:
                 print(
                     "channelName_log not in h5data. Setting Pulse Generator Amplitude to index"
                 )
@@ -119,11 +115,11 @@ class DataImport:
         if offset:
             self._int_states[-1] = self._int_states[-1] + offset
 
-        if labels != None:
-            self._states_labels = labels
-        else:
+        if labels is None:
             self._states_labels = range(len(self._int_states))
 
+        else:
+            self._states_labels = labels
         self.set_dataset_size()
 
     def set_dataset_size(self, size=None, X=None):
@@ -147,17 +143,16 @@ class DataImport:
         state_list, label_list = [], []
         for i, j in enumerate(X):
             state_list.append(j[: self.size])
-            if X_temp == True:
+            if X_temp:
                 label_list.append(
                     np.ones(np.array(state_list[i]).shape[0]) * self._states_labels[i]
                 )
 
-        if X_temp == True:
-            self._states_X = np.concatenate(state_list)
-            self._states_target = np.concatenate(label_list)
-        else:
+        if not X_temp:
             return state_list
 
+        self._states_X = np.concatenate(state_list)
+        self._states_target = np.concatenate(label_list)
         self._split_data()
 
     def _split_data(self):
@@ -293,21 +288,21 @@ class DataImport:
         if fileSave == "classifier":
             fileSave = self.cv_search
 
-        elif fileSave == "all" or fileSave == None:
+        elif fileSave == "all" or fileSave is None:
             fileSave = self
 
         else:
             fileSave = self.fileSave
 
         # save path
-        if filePath == None:
+        if filePath is None:
             filePath = self._get_file_name_from_path(self._filePath, part="head")
 
         if filePath.endswith("/") == False:
             filePath += "/"
 
         # save name
-        if fileName == None:
+        if fileName is None:
             fileName = self._get_file_name_from_path(self._filePath).replace(
                 ".hdf5", ""
             )
@@ -319,8 +314,8 @@ class DataImport:
         if overwrite == False:
             i = 0
             file_temp = file
-            while os.path.exists(file + ".pickle") == True:
-                file = file_temp + f"_{str(i).zfill(3)}"
+            while os.path.exists(f"{file}.pickle") == True:
+                file = f"{file_temp}_{str(i).zfill(3)}"
                 i += 1
 
         with open(filePath + fileName + ".pickle", "wb") as handle:
@@ -365,7 +360,7 @@ class DataImport:
             print("Got your pickle!")
             return classifier
 
-        except:
+        except Exception:
             print("Unable to locate your pickle")
 
 
@@ -387,6 +382,6 @@ def import_classifier(filePath):
         print("Got your pickle!")
         return classifier
 
-    except:
+    except Exception:
         print("Unable to locate your pickle")
 

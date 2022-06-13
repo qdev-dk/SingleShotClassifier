@@ -72,16 +72,11 @@ class Fitting(DataImport):
         from sklearn.preprocessing import StandardScaler
         from sklearn.decomposition import PCA
 
-        if scalar == True:
-            scalar = StandardScaler()
-        else:
-            scalar = None
-
-        if pca == True or int:
-            if pca == int:
-                pca = PCA(n_components=pca)
-            else:
-                pca = PCA(n_components=2)
+        scalar = StandardScaler() if scalar == True else None
+        if pca == True and pca == int or pca != True and int and pca == int:
+            pca = PCA(n_components=pca)
+        elif pca == True or int:
+            pca = PCA(n_components=2)
         else:
             pca = None
 
@@ -105,10 +100,7 @@ class Fitting(DataImport):
         from sklearn.tree import DecisionTreeClassifier
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
-        if classifier:
-            self.classifier = classifier
-        else:
-            self.classifier = svm.SVC(kernel="rbf", probability=True)
+        self.classifier = classifier or svm.SVC(kernel="rbf", probability=True)
 
     def set_cv_params(self, params=None, remove=None):
         """Sets the parameters for the cross validation. 
@@ -262,7 +254,7 @@ class Fitting(DataImport):
             y (list, optional): The y-data to use. If None the Initial states are used: self.y_train. Defaults to None.
             weights (list, optional): The calculated weights. Defaults to None.
         """
-        if X == None:
+        if X is None:
             X, y, weights = self.X_train, self.y_train, self.weights
 
         self.set_pipeline()
@@ -325,10 +317,7 @@ class Fitting(DataImport):
         import lmfit
 
         def str_none_if_none(stderr):
-            if stderr is None:
-                return "None"
-            else:
-                return stderr
+            return "None" if stderr is None else stderr
 
         if ax is None:
             ax = plt.gca()
@@ -399,7 +388,7 @@ class Fitting(DataImport):
             classifier = self.cv_search
         try:
             classifier.predict([[0, 0]])
-        except:
+        except Exception:
             print("Classifier not fitted yet. Fitting classifier now.")
             self.do_fit()
 
@@ -411,11 +400,11 @@ class Fitting(DataImport):
             param_name (string, optional): The parameter name. Defaults to None.
             score_name (string, optional): The score name. Defaults to None.
         """
-        if score_name == None:
+        if score_name is None:
             score_name = "mean_test_score"
             score_std = "std_test_score"
 
-        if param_name == None:
+        if param_name is None:
             param_name = "Parameter"
 
         if (

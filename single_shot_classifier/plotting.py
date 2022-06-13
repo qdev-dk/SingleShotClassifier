@@ -126,17 +126,16 @@ class Plotting(Fitting):
         )
 
         # plot support vectors
-        if hasattr(self.cv_search, "support_vectors_"):
-            if plot_support:
-                ax.scatter(
-                    self.cv_search.support_vectors_[:, 0],
-                    self.cv_search.support_vectors_[:, 1],
-                    s=300,
-                    alpha=0.7,
-                    linewidth=1,
-                    facecolors="None",
-                    edgecolors="k",
-                )
+        if hasattr(self.cv_search, "support_vectors_") and plot_support:
+            ax.scatter(
+                self.cv_search.support_vectors_[:, 0],
+                self.cv_search.support_vectors_[:, 1],
+                s=300,
+                alpha=0.7,
+                linewidth=1,
+                facecolors="None",
+                edgecolors="k",
+            )
 
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
@@ -171,7 +170,7 @@ class Plotting(Fitting):
         if y is None:
             y = np.array(self.y_train)
 
-        if isinstance(sample_weight, int) == False:
+        if not isinstance(sample_weight, int):
             sample_weight = self.weights
 
         for i in np.unique(y):
@@ -196,7 +195,7 @@ class Plotting(Fitting):
         ticks_y = ticker.FuncFormatter(lambda x, pos: "{0:g}".format(x / scale))
         ax.yaxis.set_major_formatter(ticks_y)
 
-        if title == None:
+        if title is None:
             kernel = self.cv_search.best_estimator_[-1].kernel
             title = self._fileName
 
@@ -257,7 +256,7 @@ class Plotting(Fitting):
         ticks_y = ticker.FuncFormatter(lambda x, pos: "{0:g}".format(x / scale))
         ax.yaxis.set_major_formatter(ticks_y)
 
-        if title == None:
+        if title is None:
             kernel = self.cv_search.best_estimator_[-1].kernel
             title = self._fileName
 
@@ -329,7 +328,7 @@ class Plotting(Fitting):
         ax.plot(
             FPR_macro,
             TPR_macro,
-            label=f"macro-average ROC curve (area = %0.3f)" % roc_auc_macro,
+            label="macro-average ROC curve (area = %0.3f)" % roc_auc_macro,
             linestyle="--",
         )
 
@@ -343,7 +342,7 @@ class Plotting(Fitting):
         ax.plot(
             FPR_micro,
             TPR_micro,
-            label=f"micro-average ROC curve (area = %0.3f)" % roc_auc_micro,
+            label="micro-average ROC curve (area = %0.3f)" % roc_auc_micro,
             linestyle="--",
         )
 
@@ -356,7 +355,7 @@ class Plotting(Fitting):
         )
         ax.legend(loc="lower right")
 
-        if title == None:
+        if title is None:
             kernel = self.cv_search.best_estimator_[-1].kernel
             title = self._fileName
 
@@ -400,7 +399,7 @@ class Plotting(Fitting):
         if title != "":
             ax.set_title("Scores of candidates over iterations")
 
-        if title == None:
+        if title is None:
             title = self._fileName
         kernel = self.cv_search.best_estimator_[-1].kernel
 
@@ -442,10 +441,10 @@ class Plotting(Fitting):
         Returns:
             ax (object): The figure object
         """
-        if title == None:
+        if title is None:
             title = self._fileName
 
-        if size == None:
+        if size is None:
             size = self._int_states.shape[1]
 
         if hasattr(self, "_osc_state") == False:
@@ -470,7 +469,7 @@ class Plotting(Fitting):
             if mode == "probability":
                 y = self.probability_values
                 if self._osc_state == "all":
-                    ax.set_ylabel(f"Probability")
+                    ax.set_ylabel("Probability")
                 else:
                     ax.set_ylabel(f"Probability of state {int(self._osc_state)}")
 
@@ -478,7 +477,7 @@ class Plotting(Fitting):
             if x is None:
                 try:
                     x = range(X.shape[0])
-                except:
+                except Exception:
                     x = self.h5data_log["axis"]
 
             if mode == "probability" and self._osc_state == "all":
@@ -503,8 +502,8 @@ class Plotting(Fitting):
         ax.set_xlabel(self.h5data_log["name"])
         ax.legend(loc="center left", bbox_to_anchor=(1, 0.5))
 
-        fit_type = r"$A \times sin(\omega x + \varphi) + c$"
         if title != "":
+            fit_type = r"$A \times sin(\omega x + \varphi) + c$"
             ax.set_title(title + "\n Fit type: " + fit_type)
 
         self.savefigure("oscillation", save_fig)
@@ -521,22 +520,22 @@ class Plotting(Fitting):
         Returns:
             ax (object): The figure object
         """
-        if plot_dir == None:
+        if plot_dir is None:
             try:
                 plot_dir = self._plot_dir
-            except:
+            except Exception:
                 print("self._plot_dir is not defined. Define using self.set_plot_dir()")
 
         try:
             std = np.array(plot_dir["score_std"]) / 2
-        except:
+        except Exception:
             std = None
 
         fig, ax = plt.subplots(figsize=self.figsize, constrained_layout=True)
 
         ax.errorbar(plot_dir["param_value"], plot_dir["score_value"], yerr=std)
 
-        if title == None:
+        if title is None:
             title = self._fileName
 
         if title != "":
@@ -554,7 +553,7 @@ class Plotting(Fitting):
     def plot_temp(self, save_fig=False, title=None, size=None):
         self.calculate_temp()
 
-        if title == None:
+        if title is None:
             title_ = self._fileName
         kernel_ = self.cv_search.best_estimator_[-1].kernel
 
@@ -572,7 +571,7 @@ class Plotting(Fitting):
 
     def savefigure(self, title, save_fig=False):
         if save_fig == True:
-            path = "plots/{}".format(self._fileName.replace(".hdf5", ""))
+            path = f'plots/{self._fileName.replace(".hdf5", "")}'
             filename = title + ", " + self._fileName.replace(".hdf5", "") + ".svg"
 
             self.mkdir_p(path)  # try to make folder
@@ -587,10 +586,8 @@ class Plotting(Fitting):
 
         try:
             makedirs(mypath)
-        except OSError as exc:  # Python >2.5
-            if exc.errno == EEXIST and path.isdir(mypath):
-                pass
-            else:
+        except OSError as exc:
+            if exc.errno != EEXIST or not path.isdir(mypath):
                 raise
 
 
